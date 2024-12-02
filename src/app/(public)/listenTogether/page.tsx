@@ -26,7 +26,7 @@ function Page() {
 
   const [message, setMessage] = useState<string>("");
   const [chatMessages, setChatMessages] = useState<
-    { user: string; message: string }[]
+    { user: object; message: string }[]
   >([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSongs, setFilteredSongs] = useState<DataSong[]>([]);
@@ -121,13 +121,10 @@ function Page() {
   //   };
   // }, []);
 
-  socket?.on("disconnect", () => {
-    console.log("Đã ngắt kết nối socket");
-    setVisible(false);
-  })
+  useEffect(() => {
+    if (!socket) return;
 
-
-   socket?.on("UpdateAudio", (data) => {
+    socket?.on("UpdateAudio", (data) => {
       console.log("Update audio:", data);
       if (audioRef.current) {
         audioRef.current.currentTime = data.currentTime;
@@ -139,41 +136,69 @@ function Page() {
       }
     });
 
-  socket?.on("memberJoined", (data) => {
-    console.log("member: ", data.username);
-  });
+    socket?.on("memberJoined", (data) => {
+      console.log("member: ", data.username);
+    });
 
-  socket?.on("memberLeft", (data) => {
-    console.log("member đã rời khỏi: ", data.username);
-  });
+    socket?.on("memberLeft", (data) => {
+      console.log("member đã rời khỏi: ", data.username);
+    });
 
-  socket?.on("members", (data)=> {
-    setMembers(data)
-  })
+    socket?.on("members", (data) => {
+      console.log("members: ", data);
+      setMembers(data);
+    });
 
-  socket?.on("leaveRoomFailed", () => {
-    console.log("leaveRoomFailed")
-  })
+    socket?.on("leaveRoomFailed", () => {
+      console.log("leaveRoomFailed");
+    });
 
-  socket?.on("roomClosed", () => {
-    setVisible(false);
-    console.log("host đã thoát");
-    socket.emit("leaveRoom");
-    socket.on("leaveRoomSuccess", () => {
-      console.log("Leave room success")
-      setVisible(false)
-    })
-  });
+    socket?.on("roomClosed", () => {
+      setVisible(false);
+      console.log("host đã thoát");
+      socket.emit("leaveRoom");
+      socket.on("leaveRoomSuccess", () => {
+        console.log("Leave room success");
+        setVisible(false);
+      });
+    });
+
+    socket?.on("ServerSendMessage", (data) => {
+      console.log("Received message data:", data);
+      setChatMessages((prevMessages) => [
+        ...prevMessages,
+        { user: data.user, message: data.message },
+      ]);
+    });
+
+    socket?.on("disconnect", () => {
+      console.log("Đã ngắt kết nối socket");
+      setVisible(false);
+    });
+
+    return () => {
+      socket.off("UpdateAudio");
+      socket.off("memberJoined");
+      socket.off("memberLeft");
+      socket.off("members");
+      socket.off("leaveRoomFailed");
+      socket.off("roomClosed");
+      socket.off("ServerSendMessage");
+      socket.off("disconnect");
+    };
+  }, [socket]);
+
+ 
 
   const handleJoinRoom = async () => {
     socket?.emit("joinRoom", roomId);
     socket?.on("joinRoomSuccess", (data) => {
       console.log("Join Success to room:", data.roomId);
       setPermit(data.permit);
-      setVisible(true)
+      setVisible(true);
     });
     socket?.on("joinRoomFailed", (data) => {
-      console.log("joinRoomFailed", data)
+      console.log("joinRoomFailed", data);
     });
   };
 
@@ -184,7 +209,7 @@ function Page() {
       setVisible(true);
     });
     socket?.on("createRoomFailed", (data) => {
-      console.log("createRoomFailed", data)
+      console.log("createRoomFailed", data);
     });
   };
 
@@ -192,7 +217,7 @@ function Page() {
     socket?.emit("leaveRoom");
     socket?.on("leaveRoomSuccess", () => {
       console.log("Leave room success");
-      setVisible(false)
+      setVisible(false);
     });
   };
 
@@ -263,13 +288,28 @@ function Page() {
       </div>
 
       {visible === true && (
-        
         <div className="w-full flex justify-between gap-4">
           <h1>List user</h1>
           <ul>
-            {members.map((member, index) => (
+            {/* {members.map((member, index) => (
               <li key={index}>{member}</li>
-            ))}
+            ))} */}
+
+            {members.map((member, index) => {
+              const memberId = Object.keys(member)[0];
+              const memberInfo = member[memberId];
+              return (
+                <li key={index} style={{ display: "flex" }}>
+                  <img
+                    src={memberInfo.image}
+                    alt={memberInfo.username}
+                    height="30"
+                    width="30"
+                  />
+                  {memberInfo.username} {/* Hiển thị tên người dùng */}
+                </li>
+              );
+            })}
           </ul>
           <div className="w-1/3 flex flex-col gap-4">
             <h1 className="text-primaryColorPink">List Music</h1>
@@ -311,8 +351,8 @@ function Page() {
               <div className="w-full border border-primaryColorBlue">
                 {chatMessages.map((msg, index) => (
                   <div key={index}>
-                    <p>{msg.user}</p>
-                    <h3>{msg.message}</h3>
+                    <p style={{display: "flex"}}><img src={msg.user.image} alt={msg.user.username} height="30" width="30"/> {msg.user.username} : {msg.message}</p>
+                    {/* <h3>{msg.message}</h3> */}
                   </div>
                 ))}
               </div>
