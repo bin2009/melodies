@@ -4,7 +4,6 @@ import songimg from "@/assets/img/placeholderPlaylist.png";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useEffect, useState } from "react";
 import AlbumDetailSheet from "@/components/admin/albumDetailSheet";
-import { DataAlbum } from "@/types/interfaces";
 
 export interface Album {
   albumId: string;
@@ -13,8 +12,10 @@ export interface Album {
   albumType: 'ep' | 'single' | 'album';
   createdAt: string;
   totalSong: string;
-  mainArtist: MainArtist[];
+  mainArtist: MainArtist;
   albumImages: { image: string }[];
+  // mainArtist: MainArtist[];
+  // albumImages: { image: string }[];
 }
 
 export interface MainArtist {
@@ -23,6 +24,7 @@ export interface MainArtist {
   avatar: string;
   bio: string | null;
   createdAt: string;
+  updatedAt: string; 
   genres: Genre[];
 }
 
@@ -181,8 +183,8 @@ function ListAlbumsAdmin({
                 </td>
                 <td className="text-textMedium pl-2 text-center">
                   <div className="line-clamp-1">
-                    {album.mainArtist && album.mainArtist.length > 0
-                      ? album.mainArtist.map((artist) => artist.name).join(", ")
+                    {album.mainArtist 
+                      ? album?.mainArtist?.name
                       : "Unknown Artist"}
                   </div>
                 </td>

@@ -8,9 +8,9 @@ import { useAppContext } from '@/app/AppProvider'
 const Page = () => {
     const router = useRouter()
     const { accessToken } = useAppContext()
-    const handlePay = async () => {
+    const handlePay = async (packageId: string) => {
         const payload = {
-            packageId: 'eff9cb0d-cf7d-4d45-9c94-f056e1dd398f'
+            packageId: packageId
         }
         try {
             const result = await fetchApiData(
@@ -83,7 +83,7 @@ const Page = () => {
                     </ul>
                     <button aria-describedby="tier-hobby"
                         className="w-full mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:mt-10"
-                        onClick={handlePay}
+                        onClick={() => handlePay('eff9cb0d-cf7d-4d45-9c94-f056e1dd398f')}
                     >
                         Get started today
                     </button>
@@ -133,7 +133,12 @@ const Page = () => {
                             Cancel anytime
                         </li>
                     </ul>
-                    <a href="#" aria-describedby="tier-enterprise" className="mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10">Get started today</a>
+                    <button aria-describedby="tier-hobby"
+                        className="w-full mt-8 block rounded-md bg-indigo-500 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 sm:mt-10"
+                        onClick={() => handlePay('26570c7a-407c-47f9-8ad2-5848aad6fef3')}
+                    >
+                        Get started today
+                    </button>
                 </div>
             </div>
             <div className='flex flex-col items-center text-center mt-24'>

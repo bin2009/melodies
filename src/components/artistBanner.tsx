@@ -1,18 +1,45 @@
 'use client'
 import React, { useState } from "react";
 import tinycolor from "tinycolor2";
-import { useAppContext } from '@/components/provider/songProvider';
+import { useAppContext as useSongContext } from '@/components/provider/songProvider';
 import './scss/artistBanner.scss'
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { Artist } from "@/types/interfaces";
+import { Toast, ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/hooks/use-toast";
+import { useAppContext } from "@/app/AppProvider";
+import { fetchApiData } from "@/app/api/appService";
 
 interface BannerProps {
     data?: Artist
     color?: string
 }
 const ArtistBanner: React.FC<BannerProps> = ({ data, color }) => {
-    const { showSidebarRight } = useAppContext();
-    const [tym, setTym] = useState<boolean>(false)
+    const { toast } = useToast()
+    const { accessToken } = useAppContext()
+    const { showSidebarRight } = useSongContext();
+    const [tym, setTym] = useState<boolean>(data?.followed ?? false)
+    const [follower, setFollower] = useState<number>(data?.totalFollow ?? 0)
+
+    const handleTymArtist = async () => {
+        const payload = {
+            artistId: data ? data.id : undefined
+        }
+        if (accessToken) {
+            const response = await fetchApiData('/api/user/actions/followed', 'POST', JSON.stringify(payload), accessToken);
+            if (response.success) {
+                setTym(!tym)
+                setFollower((prev) => (tym ? prev - 1 : prev + 1));
+            }
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: 'You must be logged in to perform this function',
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+        }
+    }
 
     const darkerColor = tinycolor(color).darken(30).toString();
 
@@ -54,14 +81,14 @@ const ArtistBanner: React.FC<BannerProps> = ({ data, color }) => {
                 <p className={`font-bold ${showSidebarRight ? 'text-6xl' : 'text-7xl'}  mb-4`}>{data?.name}</p>
                 <div
                     className="flex items-end cursor-pointer text-[1.2rem]"
-                    onClick={() => setTym(!tym)} // Toggle between "liked" and "unliked" state
+                    onClick={handleTymArtist}
                 >
                     {tym ? (
                         <FaHeart className="text-[#F75050] ml-[0.75%] mt-[0.75%] text-[1.7rem] transition-transform duration-300 hover:scale-[1.1]" />
                     ) : (
                         <FaRegHeart className="text-[#F75050] ml-[0.75%] mt-[0.75%] text-[1.7rem] transition-transform duration-300 hover:scale-[1.1]" />
                     )}
-                    <p className="ml-2 text-[0.95rem]">{data?.totalFollow.toLocaleString()} followers</p>
+                    <p className="ml-2 text-[0.95rem]">{follower.toLocaleString()} followers</p>
                 </div>
             </div>
         </div>

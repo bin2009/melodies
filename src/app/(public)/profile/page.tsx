@@ -120,10 +120,14 @@ const Page = () => {
                                 />
                                 <p className='text-[0.8rem]'>JPG, GIF or PNG. 1MB max.</p>
                             </div>
-                            <FaCrown
-                                className='w-6 h-6 ml-6 text-yellow-400 cursor-pointer'
-                                onClick={() => router.push('/package')}
-                            />
+                            {
+                                user?.accountType === 'PREMIUM' && (
+                                    <FaCrown
+                                        className='w-6 h-6 ml-6 text-yellow-400 cursor-pointer'
+                                        onClick={() => router.push('/package')}
+                                    />
+                                )
+                            }
                         </div>
                         <div className='mt-8'>
                             <div className='space-y-10'>
@@ -141,11 +145,11 @@ const Page = () => {
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
                                         value={username}
-                                        onChange={(e) => setUsername(e.target.value)}
+                                        disabled
                                         placeholder="User Name"
-                                        className="text-[0.9rem] peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-pink-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
+                                        className="peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal outline-none placeholder-shown:border-blue-gray-200 focus:border-pink-500 focus:outline-none disabled:border-blue-gray-200 disabled:text-gray-400"
                                     />
-                                    <label className="font-bold after:content[' '] pointer-events-none absolute left-0 -top-2.5 flex h-full w-full select-none leading-tight text-blue-gray-500 transition-all after:absolute after:-bottom-2.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-pink-500 after:transition-transform after:duration-300 peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:after:scale-x-100 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
+                                    <label className="font-bold pointer-events-none absolute left-0 -top-2.5 flex h-full w-full select-none leading-tight text-blue-gray-500 transition-all peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-pink-500 peer-disabled:text-blue-gray-400 peer-disabled:peer-placeholder-shown:text-blue-gray-400">
                                         User Name
                                     </label>
                                 </div>

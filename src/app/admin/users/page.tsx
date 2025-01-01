@@ -98,18 +98,6 @@ function Page() {
       <div className=" w-[90%] p-4 flex flex-col items-start rounded-xl gap-4">
         <div className="w-full flex items-center justify-between px-3 mb-3">
           <h1 className="text-h2 text-primaryColorPink">List User</h1>
-
-          <div
-            id="search-header"
-            className="w-1/4 h-[35px] flex bg-transparent border border-darkBlueHover items-center px-2 rounded-full hover:bg-darkerBlue"
-          >
-            <MagnifyingGlassIcon className="w-[20px] h-[20px] text-primaryColorBlue font-extrabold stroke-2" />
-            <input
-              type="text"
-              placeholder="Search for user"
-              className="ml-2 py-2 pr-2 bg-transparent border-none outline-none placeholder:text-white/70"
-            />
-          </div>
         </div>
         <ListUser data={listUsersData} page={page} />
         <PaginationWithLinks page={page} totalPage={totalPage} />

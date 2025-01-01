@@ -4,10 +4,11 @@ import { useRouter } from "next/navigation";
 import { useAppContext } from "@/app/AppProvider";
 import { useAppContext as useSongContext } from "@/components/provider/songProvider";
 import Image from "next/image";
+import { useToast } from "@/hooks/use-toast"
 import { fetchApiData } from "@/app/api/appService";
 import LoadingPage from "@/components/loadingPage";
 import NotFound from "@/app/not-found";
-
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoPlayCircleOutline } from "react-icons/io5";
 import { TfiMoreAlt } from "react-icons/tfi";
 import { RiPlayListAddLine } from "react-icons/ri";
@@ -17,10 +18,14 @@ import SongList from "@/components/listSong";
 import PopularArtists from "@/components/popularArtists";
 import { DataSong } from "@/types/interfaces";
 import { getAllArtistsInfo, getMainArtistInfo, getPosterSong } from "@/utils/utils";
+import { ToastAction } from "@/components/ui/toast";
+import { BiBody } from "react-icons/bi";
 
 const Page = ({ params }: { params: { id: string } }) => {
     const router = useRouter()
-    const { loading, setLoading } = useAppContext();
+    const { toast } = useToast()
+
+    const { loading, setLoading, accessToken } = useAppContext();
     const { addToWaitingList, setCurrentSong } = useSongContext();
     const [notFound, setNotFound] = useState(false);
     const [dominantColor, setDominantColor] = useState<string>();
@@ -28,13 +33,34 @@ const Page = ({ params }: { params: { id: string } }) => {
     const [anotherSong, setAnotherSong] = useState<DataSong[]>([])
     const [mainArtist, setMainArtist] = useState<string | undefined>()
     const [showMenuMore, setShowMenuMore] = useState<boolean>(false)
+    const [tym, setTym] = useState<boolean>(false)
+
+    const handleTymSong = async () => {
+        const payload = {
+            songId: params.id
+        }
+        if (accessToken) {
+            const response = await fetchApiData('/api/user/actions/likedsong', 'POST', JSON.stringify(payload), accessToken);
+            if (response.success) {
+                setTym(!tym)
+            }
+        } else {
+            toast({
+                variant: "destructive",
+                title: "Uh oh! Something went wrong.",
+                description: 'You must be logged in to perform this function',
+                action: <ToastAction altText="Try again">Try again</ToastAction>,
+            });
+        }
+    }
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-            const result = await fetchApiData(`/api/song/${params.id}`, "GET");
+            const result = await fetchApiData(`/api/song/${params.id}`, "GET", null, accessToken);
             if (result.success) {
                 setDataSong(result.data.song)
+                setTym(result.data.song.liked ?? false);
                 const imageUrl = typeof getPosterSong(result.data.song.album).image === 'string' ? getPosterSong(result.data.song.album).image : ''
                 setMainArtist(getMainArtistInfo(result.data.song.artists)?.name)
                 try {
@@ -117,6 +143,16 @@ const Page = ({ params }: { params: { id: string } }) => {
                             <h3>Song</h3>
                             <h1 className="mt-2 text-5xl font-bold">{dataSong?.title}</h1>
                             <div className="mt-3 flex items-center space-x-2 text-h4 font-semibold">
+                                <div
+                                    className="flex items-end cursor-pointer text-[1.2rem]"
+                                    onClick={handleTymSong}
+                                >
+                                    {tym ? (
+                                        <FaHeart className="text-[#F75050] ml-[0.75%] mt-[0.75%] text-[1.7rem] transition-transform duration-300 hover:scale-[1.1]" />
+                                    ) : (
+                                        <FaRegHeart className="text-[#F75050] ml-[0.75%] mt-[0.75%] text-[1.7rem] transition-transform duration-300 hover:scale-[1.1]" />
+                                    )}
+                                </div>
                                 <div className="flex">
                                     {dataSong?.artists ? (
                                         getAllArtistsInfo(dataSong.artists).map((artist, index, array) => (
@@ -134,7 +170,6 @@ const Page = ({ params }: { params: { id: string } }) => {
                                         <p>Unknown Artist</p>
                                     )}
                                 </div>
-
                                 <span className="text-gray-300">•</span>
                                 <p className="">{dataSong?.album ? getPosterSong(dataSong.album).title : "Unknown Album"}</p>
                                 <span className="text-gray-300">•</span>

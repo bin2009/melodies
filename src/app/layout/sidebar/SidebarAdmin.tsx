@@ -110,6 +110,8 @@ const SidebarAdmin = () => {
           </defs>
         </svg>
       </Link>
+      <div className="h-full flex flex-col justify-between">
+
       <div id="menu-section" className="mb-5">
         <p className="text-primaryColorPink/60 text-[0.8rem]">Menu</p>
         <div
@@ -181,23 +183,14 @@ const SidebarAdmin = () => {
       </div>
 
       <div id="general-section" className="mb-5">
-        <p className="text-primaryColorPink/60 text-[0.8rem]">General</p>
         <div
-          className={`flex my-2 cursor-pointer ${getMenuClass(
-            "Setting"
-          )} py-2 items-center `}
-          onClick={() => handleMenuClick("Setting")}
-        >
-          <GearIcon className="w-[24px] h-[24px] mr-3" />
-          <Link href="/setting">Setting</Link>
-        </div>
-        <div
-          className={`flex my-2 cursor-pointer py-2 items-center`}
+          className={`flex my-2 cursor-pointer py-2 mb-10 items-center`}
           onClick={() => handleLogout()}
         >
           <ExitIcon className="w-[24px] h-[24px] mr-3 text-primaryColorPink" />
           <p className="text-primaryColorPink text-[0.9rem]">Logout</p>
         </div>
+      </div>
       </div>
     </div>
   );

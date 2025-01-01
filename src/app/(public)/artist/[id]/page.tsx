@@ -13,7 +13,7 @@ import { Artist } from "@/types/interfaces";
 import { IoPlayCircleOutline } from "react-icons/io5";
 
 const Page = ({ params }: { params: { id: string } }) => {
-    const { loading, setLoading } = useAppContext();
+    const { loading, setLoading, accessToken } = useAppContext();
     const { setCurrentSong, setWaitingList, showSidebarRight } = useSongContext()
     const { scrollAreaRef } = useScrollArea();
     const [dataArtist, setDataArtist] = useState<Artist>()
@@ -46,7 +46,7 @@ const Page = ({ params }: { params: { id: string } }) => {
             setLoading(true);
             try {
                 const responses = await Promise.all([
-                    fetchApiData(`/api/artist/${params.id}`, "GET"),
+                    fetchApiData(`/api/artist/${params.id}`, "GET", null, accessToken),
                     fetchApiData(`/api/artist/popSong/${params.id}`, "GET", null, null, { page: 1 }),
                     fetchApiData(`/api/artist/album/${params.id}`, "GET", null, null, { page: 1 }),
                 ]);

@@ -29,7 +29,6 @@ function Page() {
   const page = parseInt(searchParams?.get("page") || "1", 10);
   const [totalPage, setTotalPage] = useState(1);
   const [listArtistsAdminData, setListArtistsAdminData] = useState<Artist[]>([]);
-  // const [genreList, setGenreList] = useState([]);
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const { toast } = useToast()
   const { accessToken } = useAppContext()

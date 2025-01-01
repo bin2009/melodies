@@ -78,7 +78,7 @@ const AddTrackSheet: React.FC<AddTrackSheetProps> = ({ onSave, artist }) => {
     }
   }, [mainArtist]);
 
-  const handleMainArtistSelect = (selectedArtist: Artist) => {
+  const handleMainArtistSelect = async (selectedArtist: Artist) => {
     if (mainArtist === selectedArtist.id) {
       setMainArtist("");
       setListArtist((prevList) =>
@@ -348,7 +348,6 @@ const AddTrackSheet: React.FC<AddTrackSheetProps> = ({ onSave, artist }) => {
                   const formattedDate = `${month}/${day}/${year} 00:00:00`; // Chuyển sang định dạng MM/dd/yyyy HH:mm:ss
                   setReleaseDate(formattedDate);
                 }}
-                max={new Date().toISOString().split("T")[0]}
                 required
               />
             </div>

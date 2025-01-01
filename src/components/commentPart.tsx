@@ -108,7 +108,7 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
 
     return (
         <div>
-            <Comment dataUser={data?.user} time={data?.createdAt} comment={data?.content || ''} role='parent' isMyCmt={data?.myComment} />
+            <Comment dataUser={data?.user} idComment={data?.id} time={data?.createdAt} comment={data?.content || ''} role='parent' isMyCmt={data?.myComment} />
             {showCmtChild && (
                 <div className="">
                     {childrenCmt.length > 0 && (
@@ -116,6 +116,7 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
                             <Comment
                                 key={childComment.id || index}
                                 dataUser={childComment.user}
+                                idComment={childComment.id}
                                 time={childComment.createdAt}
                                 comment={childComment.content}
                                 role="children"

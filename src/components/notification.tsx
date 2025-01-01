@@ -4,7 +4,8 @@ import { useAppContext } from "@/app/AppProvider";
 import { useRouter } from "next/navigation";
 import { BellIcon } from "@radix-ui/react-icons";
 import { FaCommentAlt } from "react-icons/fa";
-import { IoSettings } from "react-icons/io5";
+import { IoSettings, IoWallet } from "react-icons/io5";
+import { FaCrown } from "react-icons/fa6";
 import { Notification as NotificationType } from "@/types/interfaces";
 import ShowDeleteComment from "@/components/popup/showDeleteComment";
 import { formatTimeCommentNotification } from "@/utils/utils";
@@ -16,7 +17,7 @@ const Notification = () => {
   const [notification, setNotification] = useState<NotificationType>();
   const router = useRouter();
   const handleClickNotification = (notification: NotificationType) => {
-    if (notification.type === "PACKAGE") {
+    if (notification.type === "PACKAGE" || notification.type === "PAYMENT") {
       router.push("/package");
     } else if (notification.type === "COMMENT") {
       setShowModalCmt(true);
@@ -48,10 +49,10 @@ const Notification = () => {
                       <IoSettings className="w-4 h-4" />
                     )}
                     {notification.type === "PACKAGE" && (
-                      <FaCommentAlt className="w-4 h-4" />
+                      <FaCrown className="w-4 h-4" />
                     )}
                     {notification.type === "PAYMENT" && (
-                      <FaCommentAlt className="w-4 h-4" />
+                      <IoWallet className="w-4 h-4" />
                     )}
                   </div>
                   <div className="pr-3">

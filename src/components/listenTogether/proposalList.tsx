@@ -121,7 +121,7 @@ function ProposalList({
   };
 
   return (
-    <div className="w-1/4 h-screen flex flex-col gap-6 relative bg-secondColorBg rounded-lg">
+    <div className="">
       {/* Search */}
       <div className="absolute top-0 left-0 w-full h-full z-10 p-4 rounded-lg">
         <div className="flex flex-col h-full w-full">

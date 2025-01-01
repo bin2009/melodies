@@ -458,7 +458,6 @@ const TrackDetailSheet: React.FC<TrackDetailProps> = ({ trackId, onClose }) => {
                     const formattedDate = `${month}/${day}/${year} 00:00:00`; // Chuyển sang định dạng MM/dd/yyyy HH:mm:ss
                     setReleaseDate(formattedDate);
                   }}
-                  max={new Date().toISOString().split("T")[0]}
                 />
               </div>
             </div>

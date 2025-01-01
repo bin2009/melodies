@@ -11,6 +11,7 @@ import {
   ExitIcon,
   GearIcon,
   ListBulletIcon,
+  ExternalLinkIcon,
 } from "@radix-ui/react-icons";
 import { CgProfile } from "react-icons/cg";
 import { useRouter, usePathname } from "next/navigation";
@@ -21,7 +22,7 @@ import { BiAperture } from "react-icons/bi";
 import UploadSong from "@/components/uploadSong";
 
 const Sidebar = () => {
-  const { accessToken, socket, setAccessToken, setRole, setShowPlaylistMenu } =
+  const { accessToken, socket, setAccessToken, role, setRole, setShowPlaylistMenu } =
     useAppContext();
   const [showRequireLogin, setShowRequireLogin] = useState(false);
   const [
@@ -44,7 +45,6 @@ const Sidebar = () => {
   const currentPath = usePathname();
   const isInListenTogether = currentPath.startsWith("/listenTogether/");
   const handleMenuClick = (menuItem: string) => {
-
     if (isInListenTogether) {
       setShowPlaylistMenu(false);
       toast({
@@ -131,9 +131,21 @@ const Sidebar = () => {
       : "text-[0.9rem]";
   };
   return (
-    <div className={`h-screen w-full mt-8 pl-9 pr-7 drop-shadow-lg z-20 ${pb && 'pb-40'} overflow-auto scrollbar-thin scrollbar-track-black scrollbar-thumb-darkBlue`}>
+    <div className={`h-screen w-full mt-8 pl-9 pr-7 drop-shadow-lg ${pb && 'pb-40'} overflow-auto scrollbar-thin scrollbar-track-black scrollbar-thumb-darkBlue`}>
       <div id="menu-section" className="mb-5">
         <p className="text-primaryColorPink/60 text-[0.8rem]">Menu</p>
+        {role === "Admin" && (
+        <div
+          className={`flex my-2 cursor-pointer ${getMenuClass(
+            "home"
+          )} py-2 items-center `}
+          onClick={() => handleMenuClick("admin")}
+        >
+          <ExternalLinkIcon className="w-[24px] h-[24px] mr-3 text-primaryColorBlue" />
+          {/* <Link href="/">Home</Link> */}
+          <p className="text-primaryColorBlueHover font-bold">Admin Manage</p>
+        </div>
+        )}
         <div
           className={`flex my-2 cursor-pointer ${getMenuClass(
             "home"
@@ -188,7 +200,7 @@ const Sidebar = () => {
           <ListBulletIcon className="w-[24px] h-[24px] mr-3" />
           <p onClick={handleShowPlaylist}>Your playlists</p>
           {showRequireLogin && (
-            <div className="absolute z-20 w-[21rem] transition-opacity duration-300 ease-in-out px-6 py-4 text-sm text-black bg-[#69BFFF] rounded-lg shadow-lg transform -translate-y-1/2 left-48 top-1/2">
+            <div className="absolute z-50 w-[21rem] transition-opacity duration-300 ease-in-out px-6 py-4 text-sm text-black bg-[#69BFFF] rounded-lg shadow-lg transform -translate-y-1/2 left-48 top-1/2">
               <p className="font-bold mb-2">Create playlist</p>
               <p className="font-thin text-[0.9rem]">
                 Sign in to create and share playlists.
@@ -278,17 +290,8 @@ const Sidebar = () => {
           <UploadSong />
         </div>
 
-        <div
-          className={`flex my-2 cursor-pointer ${getMenuClass(
-            "setting"
-          )} py-2 items-center `}
-          onClick={() => handleMenuClick("setting")}
-        >
-          <GearIcon className="w-[24px] h-[24px] mr-3" />
-          <p>Setting</p>
-          {/* <Link href="/setting">Setting</Link> */}
-        </div>
 
+      </div>
         <div
           className={`flex my-2 cursor-pointer py-2 items-center`}
           onClick={() => handleLogout()}
@@ -298,7 +301,6 @@ const Sidebar = () => {
 
           {/* <p className='text-primaryColorPink'>Logout</p> */}
         </div>
-      </div>
     </div>
   );
 };

@@ -38,12 +38,15 @@ function Page() {
           }),
           fetchApiData("/api/admin/allArtistName", "GET", null, accessToken),
         ]);
+        // console.log("fetch");
         if (responses[0].success) {
           setListAlbumsAdminData(responses[0].data.data);
           setTotalPage(responses[0].data.totalPage);
         }
         if (responses[1].success) {
           setListArtistsData(responses[1].data.artists);
+        // console.log("listArtistsData", listArtistsData)
+
         }
       } catch (error) {
         console.error("Error fetching albums:", error);
@@ -53,6 +56,7 @@ function Page() {
     },
     [accessToken, setLoading]
   );
+  console.log("listArtistsData", listArtistsData)
 
   useEffect(() => {
     const handler = setTimeout(() => {

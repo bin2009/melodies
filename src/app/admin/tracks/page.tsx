@@ -28,26 +28,34 @@ function Page() {
 
   const fetchTrackAdmin = useCallback(
     async (page: number, query: string = "") => {
-      // setLoading(true);
+      setLoading(true);
       try {
         const responses = await Promise.all([
           fetchApiData("/api/admin/search/song", "GET", null, accessToken, {
             page: page,
             query: query,
           }),
+          fetchApiData("/api/admin/allArtistName", "GET", null, accessToken),
         ]);
+        // console.log("fetch")
         if (responses[0].success) {
           setListTracksData(responses[0].data.song);
           setTotalPage(responses[0].data.totalPage);
         }
+        if (responses[1].success) {
+          setListArtistsData(responses[1].data.artists);
+        // console.log("listArtistsData", listArtistsData)
+
+        }
       } catch (error) {
         console.error("Error fetching songs:", error);
       } finally {
-        // setLoading(false);
+        setLoading(false);
       }
     },
-    [accessToken]
+    [accessToken, setLoading]
   );
+  console.log("listArtistsData", listArtistsData)
   useEffect(() => {
     const handler = setTimeout(() => {
       fetchTrackAdmin(page, searchQuery);
@@ -61,32 +69,6 @@ function Page() {
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
   };
-
-  const fetchArtists = useCallback(async () => {
-    setLoading(true);
-    try {
-      const artistsResponse = await fetchApiData(
-        "/api/admin/allArtistName",
-        "GET",
-        null,
-        accessToken
-      );
-
-      if (artistsResponse.success) {
-        setListArtistsData(artistsResponse.data.artists);
-        setTotalPage(artistsResponse.data.totalPage);
-      }
-    } catch (error) {
-      console.error("Error fetching artists:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, [setLoading, accessToken]);
-
-  useEffect(() => {
-    fetchArtists();
-    fetchTrackAdmin(page);
-  }, [fetchArtists, fetchTrackAdmin, page]);
 
   const handleAddTrack = async (trackData: {
     title: string;
@@ -131,11 +113,21 @@ function Page() {
         });
         fetchTrackAdmin(page, searchQuery);
       } else {
-        alert("Error: " + response.error);
+        toast({
+          title: "Error",
+          description: `Error "${response.error}".`,
+          variant: "destructive",
+        });
+        // alert("Error: " + response.error);
       }
     } catch (error) {
       console.error("Error adding track:", error);
-      alert("An error occurred while sending the data.");
+      toast({
+        title: "Error",
+        description: "An error occurred while sending the data.",
+        variant: "destructive",
+      });
+      // alert("An error occurred while sending the data.");
     }
     console.log("New track added:", trackData);
   };
@@ -162,7 +154,6 @@ function Page() {
 
       if (response.success) {
         fetchTrackAdmin(page, searchQuery);
-
         toast({
           title: "Success",
           description: "Tracks deleted successfully.",

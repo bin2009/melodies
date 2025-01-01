@@ -33,6 +33,7 @@ export interface Artist {
     createdAt: string;
     updatedAt: string;
     popSong: Array<DataSong>
+    followed: boolean
 }
 
 //song
@@ -51,6 +52,7 @@ export interface DataSong {
     artists: Array<Artist>;
     playCount: string;
     image: string;
+    liked: boolean
 }
 
 //user
@@ -61,6 +63,7 @@ export interface User {
     accountType: string;
     name: string;
     email: string
+    package: Package
 }
 
 //comment
@@ -158,7 +161,7 @@ export interface UserRoom {
     image: string | null;
     accountType: string;
     name: string;
-    host: boolean 
+    host: boolean
 }
 
 export interface DataRoom {
@@ -229,6 +232,13 @@ export interface UserPayment {
     createdAt: string;
 }
 
+export interface Subscriptions {
+    startDate: string;
+    endDate: string;
+    id: string;
+    status: string;
+    statusUse: boolean;
+}
 export interface Package {
     id: string;
     time: string;
@@ -240,6 +250,7 @@ export interface Package {
     name: string;
     createdAt: string;
     updatedAt: string;
+    Subscriptions: Subscriptions
 }
 
 export interface Payment {

@@ -400,7 +400,6 @@ const AddAlbumSheet: React.FC<AddAlbumSheetProps> = ({ onSave, artist }) => {
                   type="date"
                   className="calendar-icon w-full border-primaryColorBlue border p-2 rounded-md bg-slate-950 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primaryColorBlue"
                   onChange={(e) => setReleaseDate(e.target.value)}
-                  max={new Date().toISOString().split("T")[0]}
                 />
               </div>
             </div>

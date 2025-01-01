@@ -10,20 +10,21 @@ import { GoReport } from "react-icons/go";
 import { useAppContext } from '@/components/provider/commentProvider';
 import { User } from '@/types/interfaces';
 import { formatTimeCommentNotification } from '@/utils/utils';
-
-
+import ReportContent from '@/components/popup/reportComment';
 interface CommentProps {
     dataUser?: User;
     time: string | undefined;
+    idComment?: string;
     comment?: string;
     role: string
     isMyCmt?: boolean
     showNotification?: boolean
 }
 
-const Comment: React.FC<CommentProps> = ({ dataUser, time, comment, role, isMyCmt, showNotification }) => {
+const Comment: React.FC<CommentProps> = ({ dataUser, time, comment, idComment, role, isMyCmt, showNotification }) => {
     const [isReply, setIsReply] = useState<boolean | null>(false)
     const [isReport, setIsReport] = useState<boolean>(false)
+    const [isOpenReport, setIsOpenReport] = useState<boolean>(false)
 
     const { replyStatus, setReplyStatus } = useAppContext()
     useEffect(() => {
@@ -33,6 +34,10 @@ const Comment: React.FC<CommentProps> = ({ dataUser, time, comment, role, isMyCm
     const handleReply = () => {
         setIsReply(!isReply)
         setReplyStatus(!isReply)
+    }
+    const handleReport = () => {
+        setIsReport(false)
+        setIsOpenReport(true)
     }
 
     return (
@@ -74,10 +79,21 @@ const Comment: React.FC<CommentProps> = ({ dataUser, time, comment, role, isMyCm
                                             />
                                             {
                                                 isReport && (
-                                                    <div className='absolute flex font-semibold items-center bg-colorPopover rounded-lg cursor-pointer z-10 shadow-lg px-2 py-2 top-5 left-10 hover:text-red-500'>
+                                                    <div
+                                                        className='absolute flex font-semibold items-center bg-colorPopover rounded-lg cursor-pointer z-10 shadow-lg px-2 py-2 top-5 left-10 hover:text-red-500'
+                                                        onClick={handleReport}
+                                                    >
                                                         <GoReport />
                                                         <p className='ml-2 text-[0.9rem]'>Report</p>
                                                     </div>
+                                                )
+                                            }
+                                            {
+                                                isOpenReport && (
+                                                    <ReportContent
+                                                        onClose={() => setIsOpenReport(false)}
+                                                        cmtId={idComment}
+                                                    />
                                                 )
                                             }
                                         </>

@@ -52,10 +52,6 @@ function Page() {
     [setLoading, accessToken]
   );
 
-  useEffect(() => {
-    fetchUserReports(page);
-  }, [fetchUserReports, page]);
-
   const fetchAIReports = useCallback(
     async (page: number) => {
       setLoading(true);
@@ -86,9 +82,12 @@ function Page() {
   );
 
   useEffect(() => {
-    fetchAIReports(page);
-  }, [fetchAIReports, page]);
-
+    if (!showAICmt) {
+      fetchUserReports(page);
+    } else {
+      fetchAIReports(page);
+    }
+  }, [fetchUserReports, fetchAIReports, page, showAICmt]);
   if (loading) return <LoadingPage />;
 
   // Lọc danh sách AI comments

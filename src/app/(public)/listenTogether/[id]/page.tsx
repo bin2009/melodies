@@ -192,6 +192,7 @@ function Page({ params }: PageProps) {
       socket.off("updateListSong");
       socket.off("playSong");
       socket.off("animation");
+
     };
   }, [router, socket]);
 
@@ -223,19 +224,16 @@ function Page({ params }: PageProps) {
   // const memoizedProposalList = useMemo(() => currentProposalList, [currentProposalList]);
   // const memoizedListUser = useMemo(() => listUser, [listUser]);
 
-  // Memoize both components instead of just their props
   const MemoizedProposalList = useMemo(
     () => (
       <ProposalList currentProposalList={currentProposalList} permit={permit} />
     ),
     [currentProposalList, permit]
   );
-
   const MemoizedListUser = useMemo(
     () => <ListUser listUser={listUser} permit={permit} />,
     [listUser, permit]
   );
-
   return (
     <div className="w-full my-20 m-6 p-8 flex flex-col gap-4">
       <div className="w-full flex items-center justify-start">
@@ -437,15 +435,13 @@ function Page({ params }: PageProps) {
             permit={permit}
           />
         )} */}
-        <div className="w-full my-20 m-6 p-8 flex flex-col gap-4">
-          {/* Keep both components mounted but control visibility */}
-          <div style={{ display: showUsers ? "none" : "block" }}>
+          <div className="w-1/4 h-screen flex flex-col gap-6 relative bg-secondColorBg rounded-lg" style={{ display: showUsers ? "none" : "block" }}>
             {MemoizedProposalList}
           </div>
-          <div style={{ display: showUsers ? "block" : "none" }}>
+          <div className="w-1/4 h-screen flex flex-col gap-6 relative bg-secondColorBg rounded-lg"
+          style={{ display: showUsers ? "block" : "none" }}>
             {MemoizedListUser}
           </div>
-        </div>
       </div>
     </div>
   );

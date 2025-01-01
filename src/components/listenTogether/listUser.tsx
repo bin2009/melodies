@@ -12,7 +12,7 @@ function ListUser({ listUser, permit }: { listUser: UserRoom[], permit: boolean 
     console.log("permit", permit);
   }, [listUser, permit]);
   return (
-    <div className="w-1/4 h-screen flex flex-col gap-6 relative bg-secondColorBg rounded-lg">
+    <div className="">
       {users.length > 0 ? (
         <div className="w-full flex flex-col gap-4 p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-darkBlue scrollbar-track-black">
           {users.map((item, index) => (

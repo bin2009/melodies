@@ -70,13 +70,14 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
 
     return (
         <div>
-            <Comment dataUser={data?.user} time={data?.createdAt} comment={data?.content || ''} role='parent' isMyCmt={data?.myComment} />
+            <Comment dataUser={data?.user} idComment={data?.id} time={data?.createdAt} comment={data?.content || ''} role='parent' isMyCmt={data?.myComment} />
             {showCmtChild && (
                 <div className="">
                     {cmtChild.length > 0 && (
                         cmtChild.map((childComment, index) => (
                             <Comment
                                 key={childComment.id || index}
+                                idComment={childComment.id}
                                 dataUser={childComment.user}
                                 time={childComment.createdAt}
                                 comment={childComment.content}
