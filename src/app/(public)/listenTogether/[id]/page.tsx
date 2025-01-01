@@ -42,7 +42,9 @@ function Page({ params }: PageProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredSongs, setFilteredSongs] = useState<DataSong[]>([]);
   // check
-  const [currentProposalList, setCurrentProposalList] = useState<DataSong[]>([]);
+  const [currentProposalList, setCurrentProposalList] = useState<DataSong[]>(
+    []
+  );
   const [waitingSongs, setWaitingSongs] = useState<DataSong[]>([]);
   const [currentSong, setCurrentSong] = useState<DataCurrentSong | null>(null);
   const [showUsers, setShowUsers] = useState(false);
@@ -174,23 +176,22 @@ function Page({ params }: PageProps) {
     });
 
     socket.on("animation", (data) => {
-      setEnableAnimation(data)
-    })
+      setEnableAnimation(data);
+    });
 
     return () => {
-      socket.off("memberJoined")
-      socket.off("memberLeft")
-      socket.off("joinRoomLinkFailed")
-      socket.off("joinRoomLinkSuccess")
-      socket.off("roomClosed")
-      socket.off("leaveRoomSuccess")
-      socket.off("addSongToWaitingListFailed")
-      socket.off("addSongToWaitingListSuccess")
-      socket.off("updateWaitingList")
-      socket.off("updateListSong")
-      socket.off("playSong")
-      socket.off("animation")
-
+      socket.off("memberJoined");
+      socket.off("memberLeft");
+      socket.off("joinRoomLinkFailed");
+      socket.off("joinRoomLinkSuccess");
+      socket.off("roomClosed");
+      socket.off("leaveRoomSuccess");
+      socket.off("addSongToWaitingListFailed");
+      socket.off("addSongToWaitingListSuccess");
+      socket.off("updateWaitingList");
+      socket.off("updateListSong");
+      socket.off("playSong");
+      socket.off("animation");
     };
   }, [router, socket]);
 
@@ -219,8 +220,21 @@ function Page({ params }: PageProps) {
     socket?.emit("leaveRoom");
   };
 
-  const memoizedProposalList = useMemo(() => currentProposalList, [currentProposalList]);
-  const memoizedListUser = useMemo(() => listUser, [listUser]);
+  // const memoizedProposalList = useMemo(() => currentProposalList, [currentProposalList]);
+  // const memoizedListUser = useMemo(() => listUser, [listUser]);
+
+  // Memoize both components instead of just their props
+  const MemoizedProposalList = useMemo(
+    () => (
+      <ProposalList currentProposalList={currentProposalList} permit={permit} />
+    ),
+    [currentProposalList, permit]
+  );
+
+  const MemoizedListUser = useMemo(
+    () => <ListUser listUser={listUser} permit={permit} />,
+    [listUser, permit]
+  );
 
   return (
     <div className="w-full my-20 m-6 p-8 flex flex-col gap-4">
@@ -381,7 +395,7 @@ function Page({ params }: PageProps) {
                                   {song.title}
                                 </p>
                                 <p className="font-thin text-primaryColorGray text-[0.9rem] truncate">
-                                {getMainArtistInfo(song.artists)?.name}
+                                  {getMainArtistInfo(song.artists)?.name}
                                 </p>
                               </div>
                               {isCurrentSong ? (
@@ -415,14 +429,23 @@ function Page({ params }: PageProps) {
             </div>
           </div>
         </div>
-        {showUsers ? (
+        {/* {showUsers ? (
           <ListUser listUser={memoizedListUser} permit = {permit}/>
         ) : (
           <ProposalList
             currentProposalList={memoizedProposalList}
             permit={permit}
           />
-        )}
+        )} */}
+        <div className="w-full my-20 m-6 p-8 flex flex-col gap-4">
+          {/* Keep both components mounted but control visibility */}
+          <div style={{ display: showUsers ? "none" : "block" }}>
+            {MemoizedProposalList}
+          </div>
+          <div style={{ display: showUsers ? "block" : "none" }}>
+            {MemoizedListUser}
+          </div>
+        </div>
       </div>
     </div>
   );
