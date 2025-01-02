@@ -86,6 +86,23 @@ function Page() {
       releaseDate,
       lyricFile,
     } = trackData;
+    // Lấy duration của audio
+  const getAudioDuration = (file) => {
+    return new Promise((resolve, reject) => {
+      const audio = new Audio();
+      audio.src = URL.createObjectURL(file);
+
+      audio.addEventListener("loadedmetadata", () => {
+        resolve(audio.duration); // Trả về duration tính bằng giây
+      });
+
+      audio.addEventListener("error", (e) => {
+        reject("Error loading audio file");
+      });
+    });
+  };
+
+
     const data = {
       title,
       mainArtistId,
@@ -96,8 +113,13 @@ function Page() {
     formData.append("data", JSON.stringify(data));
     formData.append("audioFile", audioFile);
     formData.append("lyricFile", lyricFile);
-
+    
     try {
+      const duration = await getAudioDuration(audioFile);
+      formData.append("duration", JSON.stringify(duration));
+    console.log("Audio Duration:--------------", duration);
+
+
       const response = await fetchApiData(
         "/api/admin/create/song",
         "POST",
