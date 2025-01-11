@@ -232,6 +232,8 @@ const UploadSong = () => {
                 <Input
                   id="trackTitle"
                   value={trackTitle}
+                  maxLength={150}
+
                   onChange={(e) => setTrackTitle(e.target.value)}
                   placeholder="Enter track title"
                   className="col-span-3 border-darkBlue"
@@ -252,6 +254,7 @@ const UploadSong = () => {
                   <input
                     id="releaseDate"
                     type="date"
+                    maxLength={150}
                     className="calendar-icon w-full border-primaryColorBlue border p-2 rounded-md bg-slate-950 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-primaryColorBlue"
                     onChange={(e) => setReleaseDate(e.target.value)}
                     required

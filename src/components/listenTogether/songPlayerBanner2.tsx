@@ -56,11 +56,11 @@ function SongPlayedBanner2({
     if (!socket) return;
 
     const handleAudioUpdate = (data: StateSong) => {
-      if(permit){
-        console.log("khách", data);
-        setIsPlaying(data.isPlaying);
-        setStartTime(data.currentTime);
-      }
+      // if(permit){
+      // }
+      console.log("khách", data);
+      setIsPlaying(data.isPlaying);
+      setStartTime(data.currentTime);
     };
 
     socket.on("previousSongFailed", (data) => {

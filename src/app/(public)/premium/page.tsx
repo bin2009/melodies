@@ -20,7 +20,7 @@ const Page = () => {
                 accessToken
             );
             if (result.success) {
-                router.push(result.data.paymentUrl)
+                window.open(result.data.paymentUrl, "_blank");
             }
         } catch {
 

@@ -37,6 +37,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ id }) => {
     const [totalComment, setTotalCmt] = useState<number>(0)
     const [contentCmt, setContentComment] = useState<string>('')
     const [errorPost, setErrorPost] = useState<boolean>(false)
+    const [errorPostContent, setErrorPostContent] = useState<string>('')
     const [newCmt, setNewCmt] = useState<{ data: Comment; cmtChild: Comment[] }[]>([])
 
     const handleClickSort = () => {
@@ -53,7 +54,8 @@ const CommentSection: React.FC<CommentSectionProps> = ({ id }) => {
         const response = await fetchApiData(`/api/songs/comment/${id}`, 'GET', null, accessToken, { page: page })
         if (response.success) {
             const data = await response.data;
-            setComments(prevComments => [...prevComments, ...data.comments]);
+            const visibleComments = data.comments.filter((comment: Comment) => comment.hide === false);
+            setComments(prevComments => [...prevComments, ...visibleComments]);
             setPage(prevPage => prevPage + 1);
             setTotalPage(data.totalPage)
             setTotalCmt(data.totalComment)
@@ -79,28 +81,37 @@ const CommentSection: React.FC<CommentSectionProps> = ({ id }) => {
     const handleComment = async () => {
         if (contentCmt.trim() === '') return
         setErrorPost(false)
-        const payload = {
-            songId: id,
-            content: contentCmt
-        }
-        const response = await fetchApiDataAI(`/actions/comment`, 'POST', JSON.stringify(payload), accessToken)
-        if (response.success) {
-            if (response.data.status === 'success') {
-                setNewCmt((prev) => [{ data: response.data.comment, cmtChild: [] }, ...prev])
-                setTotalCmt((prev) => prev + 1)
+        if (accessToken) {
+            const payload = {
+                songId: id,
+                content: contentCmt
+            }
+            const response = await fetchApiDataAI(`/actions/comment`, 'POST', JSON.stringify(payload), accessToken)
+            if (response.success) {
+                if (response.data.status === 'success') {
+                    setNewCmt((prev) => [{ data: response.data.comment, cmtChild: [] }, ...prev])
+                    setTotalCmt((prev) => prev + 1)
+                } else {
+                    setErrorPost(true)
+                    setErrorPostContent('Your comment violates community standards')
+                    setTimeout(() => {
+                        setErrorPost(false);
+                    }, 5000);
+                }
             } else {
                 setErrorPost(true)
                 setTimeout(() => {
                     setErrorPost(false);
                 }, 5000);
             }
+            setLoading(false);
         } else {
             setErrorPost(true)
+            setErrorPostContent('You must be logged in to perform this function')
             setTimeout(() => {
                 setErrorPost(false);
             }, 5000);
         }
-        setLoading(false);
         setContentComment('')
     }
 
@@ -172,7 +183,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({ id }) => {
                         </svg>
                         <span className="sr-only">Info</span>
                         <div>
-                            <span className="font-medium">Danger alert!</span> Your comment violates community standards
+                            <span className="font-medium">Danger alert!</span>&nbsp;{errorPostContent}
                         </div>
                     </div>
                 )
@@ -191,7 +202,9 @@ const CommentSection: React.FC<CommentSectionProps> = ({ id }) => {
                             type="text"
                             className='w-full py-2 bg-transparent border-2 border-white text-[0.9rem] rounded-3xl pl-3 pr-10 focus:outline-none'
                             placeholder='Write a comment'
+                            maxLength={150}
                             value={contentCmt}
+
                             onChange={(e) => setContentComment(e.target.value)}
                         />
                         <IoMdClose

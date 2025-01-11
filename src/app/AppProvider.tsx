@@ -13,6 +13,8 @@ import { Notification } from "@/types/interfaces";
 import { fetchNotification } from "@/utils/api";
 import { useRouter } from "next/navigation";
 interface AppContextType {
+  numberNotification: number;
+  setNumberNotification: (numberNotification: number) => void;
   listNotification: Notification[];
   setListNotification: (noti: Notification[]) => void;
   showPlaylistMenu: boolean;
@@ -46,6 +48,7 @@ export const AppProvider: React.FC<{
 }> = ({ children, initialAccessToken = "", initialRole = "" }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [listNotification, setListNotification] = useState<Notification[]>([])
+  const [numberNotification, setNumberNotification] = useState<number>(0)
   const [showPlaylistMenu, setShowPlaylistMenu] = useState<boolean>(false);
   const [search, setSearch] = useState<string>("");
   const [role, setRole] = useState<string>(() => {
@@ -75,8 +78,12 @@ export const AppProvider: React.FC<{
   useEffect(() => {
     if (accessToken) {
       const fetchAPINotification = async (accessToken: string) => {
-        const listFetchNotification = await fetchNotification(accessToken)
-        setListNotification(listFetchNotification)
+        const response = await fetchNotification(accessToken);
+        if (response) {
+          const { listFetchNotification, numberNotification } = response;
+          setListNotification(listFetchNotification);
+          setNumberNotification(numberNotification);
+        }
       }
       fetchAPINotification(accessToken)
       const newSocket = io(process.env.NEXT_PUBLIC_API_ENDPOINT, {
@@ -92,7 +99,7 @@ export const AppProvider: React.FC<{
       });
 
       newSocket.on("newNoti", (data: Notification) => {
-        console.log("newNoti: ", data)
+        setNumberNotification((prev) => Number(prev) + 1)
         setListNotification((prev) => [data, ...prev])
       })
 
@@ -114,6 +121,8 @@ export const AppProvider: React.FC<{
   }, [accessToken]);
 
   const value = {
+    numberNotification,
+    setNumberNotification,
     listNotification,
     setListNotification,
     showPlaylistMenu,

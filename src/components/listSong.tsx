@@ -81,18 +81,6 @@ const SongList: React.FC<SongListProps> = ({ maintitle, subtitle, data }) => {
             );
           }
         )}
-        <div className="flex flex-col items-center cursor-pointer justify-center">
-          <PlusIcon
-            className={`${showSidebarRight ? "w-[40px] h-[40px]" : "w-[50px] h-[50px]"
-              } bg-[#1F1F1F] rounded-full p-3 mb-2`}
-          />
-          <p
-            className={`${showSidebarRight ? "font-semibold text-[0.9rem]" : "text-h4"
-              } whitespace-nowrap`}
-          >
-            View All
-          </p>
-        </div>
       </div>
     </div >
   );

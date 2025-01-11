@@ -123,6 +123,8 @@ const Header = () => {
                 ? "text-[0.8rem] placeholder:text-[0.8rem]"
                 : "placeholder:text-[0.85rem] text-[0.85rem]"
               }  ml-2 py-2 pr-2 bg-transparent border-none outline-none placeholder:text-white/80`}
+              maxLength={150}
+
             onChange={(e) => setSearchTerm(e.target.value)}
             value={searchTerm}
           />

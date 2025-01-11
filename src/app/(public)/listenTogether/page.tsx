@@ -114,6 +114,7 @@ function Page() {
               placeholder="Enter Room ID"
               value={roomId}
               onChange={(e) => setRoomId(e.target.value)}
+              maxLength={150}
             />
             <button
               onClick={handleJoinRoom}

@@ -145,6 +145,8 @@ const AddArtistSheet: React.FC<AddArtistSheetProps> = ({ onSave }) => {
             </Label>
             <Input
               id="artistName"
+              maxLength={150}
+
               value={artistName}
               onChange={(e) => setArtistName(e.target.value)}
               placeholder="Enter artist name"

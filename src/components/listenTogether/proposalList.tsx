@@ -135,6 +135,7 @@ function ProposalList({
             <IoSearch className="text-[1.2rem]" />
             <input
               type="text"
+              maxLength={150}
               placeholder="Find songs"
               className="focus:outline-none placeholder:text-[0.9rem] placeholder:text-primaryColorGray text-primaryColorGray text-[0.9rem] bg-transparent w-full"
               value={searchTerm}

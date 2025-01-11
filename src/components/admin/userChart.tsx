@@ -63,9 +63,9 @@ function UserChart({ data }: UserChartProps) {
     100;
 
   const formattedGrowthPercentage = Number(userGrowthPercentage.toFixed(2));
-  const growthLabel = userGrowthPercentage > 0 ? "Increase" : "Decrease";
+  const growthLabel = userGrowthPercentage >= 0 ? "Increase" : "Decrease";
   const growthColor =
-    userGrowthPercentage > 0
+    userGrowthPercentage >= 0
       ? "text-primaryColorPink"
       : "text-primaryColorBlue";
 
@@ -127,11 +127,11 @@ function UserChart({ data }: UserChartProps) {
         </CardContent>
         <CardFooter className="flex-col gap-2 text-sm">
           <div className="flex items-center gap-2 font-medium leading-none">
-            {growthLabel} by{" "}
+           Have
             <span className={growthColor}>
-              {Math.abs(formattedGrowthPercentage)}%
+              {data.totalUserThisMonth || 0}
             </span>{" "}
-            user numbers this month
+            new users in this month
             <TrendingUp className="h-4 w-4" />
           </div>
         </CardFooter>

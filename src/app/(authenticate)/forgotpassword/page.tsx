@@ -18,7 +18,6 @@ import {
   RegisterBody,
   RegisterBodyType,
 } from "../../../../schemaValidations/auth.schema";
-import { FcGoogle } from "react-icons/fc";
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 
@@ -70,6 +69,7 @@ function Page() {
                       type="email"
                       {...field}
                       className="pl-9"
+                      maxLength={150}
                     />
                   </div>
                 </FormControl>
@@ -85,19 +85,6 @@ function Page() {
             Submit
           </Button>
 
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t"></div>
-            <span className="mx-3">Or</span>
-            <div className="flex-grow border-t"></div>
-          </div>
-
-          <Button
-            type="submit"
-            className="bg-transparent  border-white border-2 w-full p-4 flex items-center justify-center gap-2 "
-          >
-            <FcGoogle className="w-6 h-6" />
-            Login With Google
-          </Button>
         </form>
       </Form>
     </div>

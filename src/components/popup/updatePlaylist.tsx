@@ -116,7 +116,7 @@ const UpdatePlaylist: React.FC<UpdatePlaylistProps> = ({ onClose, data, setPlayl
                                 onChange={(e) => setUpdateName(e.target.value)}
                                 value={updateName}
                                 placeholder=" "
-                                maxLength={50}
+                                maxLength={150}
                             />
                             <label className={`absolute cursor-text bg-transparent px-1 left-[0.55rem] text-gray-400 text-sm transition-all transform origin-left 
                                         ${updateName ? "-top-2 left-2 text-xs scale-90 bg-gradient-to-b from-[#222222] to-[#333333]" : "top-[0.55rem] left-3 scale-100"}`}>
@@ -130,7 +130,7 @@ const UpdatePlaylist: React.FC<UpdatePlaylistProps> = ({ onClose, data, setPlayl
                                 onChange={(e) => setUpdateBio(e.target.value)}
                                 value={updateBio}
                                 placeholder=" "
-                                maxLength={120}
+                                maxLength={150}
                             />
                             <label className={`absolute cursor-text bg-transparent px-1 left-[0.55rem] text-gray-400 text-sm transition-all transform origin-left 
                                         ${updateBio ? "-top-2 left-2 text-xs scale-90 bg-gradient-to-b from-[#222222] to-[#333333]" : "top-3.5 left-3 scale-100"}`}>

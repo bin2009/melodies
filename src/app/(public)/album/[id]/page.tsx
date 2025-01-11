@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 const Page = ({ params }: { params: { id: string } }) => {
   const router = useRouter();
   const { loading, setLoading } = useAppContext();
+  const router = useRouter()
   const { scrollAreaRef } = useScrollArea();
   const { showSidebarRight, addListToWaitingList, setCurrentSong, setWaitingList } = useSongContext()
   const [dataAlbum, setDataAlbum] = useState<DataAlbum>()
@@ -203,9 +204,9 @@ const Page = ({ params }: { params: { id: string } }) => {
                     />
                   </td>
                   <td className="pl-4">
-                    <h3 
-                    className="text-h4 mb-1 hover:underline"
-                    onClick={()=> router.push(`/song/${song.id}`)}
+                    <h3
+                      className="text-h4 mb-1 hover:underline"
+                      onClick={() => router.push(`/song/${song.id}`)}
                     >
                       {song.title}
                     </h3>

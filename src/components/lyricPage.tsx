@@ -41,36 +41,13 @@ const LyricPage = () => {
         fetchBg()
     }, [currentSong])
 
-    // useEffect(() => {
-    //     if (currentSong) {
-    //         const fetchLyrics = async () => {
-    //             try {
-    //                 const response = await fetch('/api/getLyrics', {
-    //                     method: 'POST',
-    //                     headers: {
-    //                         'Content-Type': 'application/json',
-    //                     },
-    //                     body: JSON.stringify({ title: currentSong?.title, artist: getMainArtistInfo(currentSong?.artists)?.name }),
-    //                 });
-    //                 const data = await response.json();
-    //                 if (response.ok) {
-    //                     setLyrics(data.lyrics);
-    //                 } else {
-    //                 }
-    //             } catch (err) {
-    //                 console.error('Fetch error:', err);
-    //             }
-    //         };
-    //         fetchLyrics();
-    //     }
-    // }, [currentSong]);
 
     useEffect(() => {
-        if (currentSong) {
+        if (currentSong?.lyric) {
             const fetchLyrics = async () => {
                 try {
                     // const response = await fetch('/lyric/NangThoLyric.json');
-                    const response = await fetch('https://audiomelodies.nyc3.cdn.digitaloceanspaces.com/PBL6/LYRIC/ha.json');
+                    const response = await fetch(currentSong?.lyric);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
@@ -78,6 +55,26 @@ const LyricPage = () => {
                     setLyricsRealtime(data)
                 } catch (error) {
                     console.error('Error fetching lyrics:', error);
+                }
+            };
+            fetchLyrics();
+        } else {
+            const fetchLyrics = async () => {
+                try {
+                    const response = await fetch('/api/getLyrics', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ title: currentSong?.title, artist: currentSong?.artists ? getMainArtistInfo(currentSong.artists)?.name : '' }),
+                    });
+                    const data = await response.json();
+                    if (response.ok) {
+                        setLyrics(data.lyrics);
+                    } else {
+                    }
+                } catch (err) {
+                    console.error('Fetch error:', err);
                 }
             };
             fetchLyrics();
@@ -116,39 +113,46 @@ const LyricPage = () => {
             <div className='w-full h-24 bg-black'>
 
             </div>
-            {/* <pre
-                style={{ whiteSpace: 'pre-wrap' }}
-                className="text-center text-lg"
-            >
-                {lyrics}
-            </pre> */}
-            <div
-                ref={lyricsContainerRef}
-                className="text-center px-4 h-full lyrics-container pt-8"
-            >
-                {lyricsRealtime ? (
-                    lyricsRealtime.map((line, index) => {
-                        const isPast = startTime * 1000 > parseInt(line.startTimeMs);
-                        const isCurrent = currentLyricIndex === index;
-                        return (
-                            <p
-                                key={index}
-                                className={`mb-4 transition-all duration-500 cursor-pointer hover:underline
+            {
+                currentSong?.lyric ? (
+                    <div
+                        ref={lyricsContainerRef}
+                        className="text-center px-4 h-full lyrics-container pt-8"
+                    >
+                        {lyricsRealtime ? (
+                            lyricsRealtime.map((line, index) => {
+                                const isPast = startTime * 1000 > parseInt(line.startTimeMs);
+                                const isCurrent = currentLyricIndex === index;
+                                return (
+                                    <p
+                                        key={index}
+                                        className={`mb-4 transition-all duration-500 cursor-pointer hover:underline
                                     ${isCurrent ? 'text-black font-bold text-[1.3rem] scale-110'
-                                        : isPast
-                                            ? 'text-white text-lg opacity-50'
-                                            : 'text-white text-lg'
-                                    }`}
-                                onClick={() => handleLyricClick(parseInt(line.startTimeMs) / 1000)}
-                            >
-                                {line.words}
-                            </p>
-                        );
-                    })
+                                                : isPast
+                                                    ? 'text-white text-lg opacity-50'
+                                                    : 'text-white text-lg'
+                                            }`}
+                                        onClick={() => handleLyricClick(parseInt(line.startTimeMs) / 1000)}
+                                    >
+                                        {line.words}
+                                    </p>
+                                );
+                            })
+                        ) : (
+                            <p>Loading lyrics...</p>
+                        )}
+                    </div>
                 ) : (
-                    <p>Loading lyrics...</p>
-                )}
-            </div>
+                    <pre
+                        style={{ whiteSpace: 'pre-wrap' }}
+                        className="text-center text-lg"
+                    >
+                        {lyrics}
+                    </pre>
+                )
+            }
+
+
         </div>
     )
 }

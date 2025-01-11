@@ -67,6 +67,7 @@ function Page() {
                       type="password"
                       {...field}
                       className="pl-8"
+                      maxLength={150}
                     />
                   </div>
                 </FormControl>
@@ -89,6 +90,7 @@ function Page() {
                       type="password"
                       {...field}
                       className="pl-9"
+                      maxLength={150}
                     />
                   </div>
                 </FormControl>

@@ -265,6 +265,8 @@ const AddTrackSheet: React.FC<AddTrackSheetProps> = ({ onSave, artist }) => {
             </Label>
             <Input
               id="trackTitle"
+              maxLength={150}
+
               value={trackTitle}
               onChange={(e) => setTrackTitle(e.target.value)}
               placeholder="Enter track title"

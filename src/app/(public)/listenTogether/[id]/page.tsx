@@ -300,6 +300,7 @@ function Page({ params }: PageProps) {
                       className="focus:outline-none placeholder:text-[0.9rem] placeholder:text-primaryColorGray text-primaryColorGray text-[0.9rem] bg-transparent w-full"
                       value={searchTerm}
                       onChange={handleSearch}
+                      maxLength={150}
                     />
                   </div>
                 </div>

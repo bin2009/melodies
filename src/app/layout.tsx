@@ -22,6 +22,9 @@ const geistMono = localFont({
 export const metadata: Metadata = {
   title: "Melodies",
   description: "Melodies",
+  icons: {
+    icon: "/key-sol.svg",
+  },
 };
 
 export default function RootLayout({

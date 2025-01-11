@@ -53,7 +53,7 @@ const Sidebar = () => {
         description: "Please press the Leave Room button to perform other actions.",
       });
     } else {
-      if(menuItem === 'home') {
+      if (menuItem === 'home') {
         router.push('/');
         setActiveMenu(menuItem);
       } else {
@@ -64,10 +64,27 @@ const Sidebar = () => {
     }
   };
 
+  const handleMenuClickUploadSong = (menuItem: string) => {
+    if (isInListenTogether) {
+      setShowPlaylistMenu(false);
+      toast({
+        variant: "destructive",
+        title: "Action Required",
+        description: "Please press the Leave Room button to perform other actions.",
+      });
+    } else {
+      if (menuItem === 'home') {
+        router.push('/');
+        setActiveMenu(menuItem);
+      } else {
+        setActiveMenu(menuItem);
+      }
+    }
+  };
+
   const handleShowPlaylist = () => {
     if (accessToken) {
       setShowPlaylistMenu(true);
-      handleMenuClick("your-playlist");
     } else {
       setShowRequireLogin(true);
     }
@@ -99,6 +116,7 @@ const Sidebar = () => {
           "role=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
         setAccessToken("");
         setRole("");
+        localStorage.removeItem('avatar')
         router.replace("/");
         window.location.reload();
 
@@ -135,16 +153,16 @@ const Sidebar = () => {
       <div id="menu-section" className="mb-5">
         <p className="text-primaryColorPink/60 text-[0.8rem]">Menu</p>
         {role === "Admin" && (
-        <div
-          className={`flex my-2 cursor-pointer ${getMenuClass(
-            "home"
-          )} py-2 items-center `}
-          onClick={() => handleMenuClick("admin")}
-        >
-          <ExternalLinkIcon className="w-[24px] h-[24px] mr-3 text-primaryColorBlue" />
-          {/* <Link href="/">Home</Link> */}
-          <p className="text-primaryColorBlueHover font-bold">Admin Manage</p>
-        </div>
+          <div
+            className={`flex my-2 cursor-pointer ${getMenuClass(
+              "admin"
+            )} py-2 items-center `}
+            onClick={() => handleMenuClick("admin")}
+          >
+            <ExternalLinkIcon className="w-[24px] h-[24px] mr-3 text-primaryColorBlue" />
+            {/* <Link href="/">Home</Link> */}
+            <p className="text-primaryColorBlueHover font-bold">Admin Manage</p>
+          </div>
         )}
         <div
           className={`flex my-2 cursor-pointer ${getMenuClass(
@@ -165,27 +183,6 @@ const Sidebar = () => {
           <GlobeIcon className="w-[24px] h-[24px] mr-3" />
           {/* <Link href="/discover">Discover</Link> */}
           <p>Discover</p>
-        </div>
-        <div
-          className={`flex my-2 cursor-pointer ${getMenuClass(
-            "album"
-          )} py-2 items-center`}
-          onClick={() => handleMenuClick("albums")}
-        >
-          <DiscIcon className="w-[24px] h-[24px] mr-3" />
-          {/* <Link href="/albums">Albums</Link> */}
-
-          <p>Albums</p>
-        </div>
-        <div
-          className={`flex my-2 cursor-pointer ${getMenuClass(
-            "artist"
-          )} py-2 items-center`}
-          onClick={() => handleMenuClick("artists")}
-        >
-          <AvatarIcon className="w-[24px] h-[24px] mr-3" />
-          {/* <Link href="/artists">Artists</Link> */}
-          <p>Artists</p>
         </div>
       </div>
       <div id="playlist-section" className="mb-5">
@@ -276,7 +273,6 @@ const Sidebar = () => {
           onClick={() => handleMenuClick("profile")}
         >
           <CgProfile className="w-[24px] h-[24px] mr-3" />
-          {/* <Link href="/profile">Profile</Link> */}
           <p>Profile</p>
         </div>
 
@@ -284,23 +280,20 @@ const Sidebar = () => {
           className={`flex my-2 cursor-pointer ${getMenuClass(
             "UploadSong"
           )} py-2 items-center `}
-          onClick={() => handleMenuClick("UploadSong")}
+          onClick={() => handleMenuClickUploadSong("UploadSong")}
           style={{ pointerEvents: isInListenTogether ? 'none' : 'auto' }}
         >
           <UploadSong />
         </div>
-
-
       </div>
-        <div
-          className={`flex my-2 cursor-pointer py-2 items-center`}
-          onClick={() => handleLogout()}
-        >
-          <ExitIcon className="w-[24px] h-[24px] mr-3 text-primaryColorPink" />
-          <p className="text-primaryColorPink text-[0.9rem]">Logout</p>
-
-          {/* <p className='text-primaryColorPink'>Logout</p> */}
-        </div>
+      <div
+        className={`flex my-2 cursor-pointer py-2 items-center`}
+        onClick={() => handleLogout()}
+      >
+        <ExitIcon className="w-[24px] h-[24px] mr-3 text-primaryColorPink" />
+        <p className="text-primaryColorPink text-[0.9rem]">Logout</p>
+        {/* <p className='text-primaryColorPink'>Logout</p> */}
+      </div>
     </div>
   );
 };

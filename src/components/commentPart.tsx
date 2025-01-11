@@ -36,6 +36,7 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
     const [contentCmt, setContentComment] = useState<string>('')
     const [cmtUp, setCmtUp] = useState<number>(0)
     const [errorPost, setErrorPost] = useState<boolean>(false)
+    const [errorPostContent, setErrorPostContent] = useState<string>('')
 
     const ViewChildrenComment = async () => {
         setShowCmtChild(true)
@@ -49,7 +50,8 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
             );
 
             if (result.success) {
-                setChildrenCmt(prevComments => [...prevComments, ...result.data.comments]);
+                const visibleComments = result.data.comments.filter((comment: CommentInterface) => comment.hide === false);
+                setChildrenCmt(prevComments => [...prevComments, ...visibleComments]);
                 setTotalPage(result.data.totalPage)
                 setPage(prevPage => prevPage + 1)
                 setCmtRemain(Math.max((Number(data?.hasChild)) - page * 5, 0));
@@ -66,24 +68,32 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
     const handleComment = async () => {
         if (contentCmt.trim() === '') return
         setErrorPost(false)
-        const payload = {
-            songId: songId,
-            commentParentId: data?.id,
-            content: contentCmt
-        }
-        const response = await fetchApiDataAI(`/actions/comment`, 'POST', JSON.stringify(payload), accessToken)
-        if (response.success) {
-            if (response.data.status === 'success') {
-                setShowCmtChild(true)
-                setIsHidden(true)
-                setChildrenCmt(prevComments => [response.data.comment, ...prevComments]);
-                if (page > totalPage || data?.hasChild === 0) {
-                    setCmtRemain(0)
+        if (accessToken) {
+            const payload = {
+                songId: songId,
+                commentParentId: data?.id,
+                content: contentCmt
+            }
+            const response = await fetchApiDataAI(`/actions/comment`, 'POST', JSON.stringify(payload), accessToken)
+            if (response.success) {
+                if (response.data.status === 'success') {
+                    setShowCmtChild(true)
+                    setIsHidden(true)
+                    setChildrenCmt(prevComments => [response.data.comment, ...prevComments]);
+                    if (page > totalPage || data?.hasChild === 0) {
+                        setCmtRemain(0)
+                    } else {
+                        setCmtRemain((prev) => Number(prev) + 1)
+                    }
+                    setCmtUp((prev) => Number(prev) + 1)
+                    setTotalCmt((prev) => Number(prev) + 1)
                 } else {
-                    setCmtRemain((prev) => Number(prev) + 1)
+                    setErrorPost(true)
+                    setErrorPostContent('Your comment violates community standards')
+                    setTimeout(() => {
+                        setErrorPost(false);
+                    }, 5000);
                 }
-                setCmtUp((prev) => Number(prev) + 1)
-                setTotalCmt((prev) => Number(prev) + 1)
             } else {
                 setErrorPost(true)
                 setTimeout(() => {
@@ -92,11 +102,11 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
             }
         } else {
             setErrorPost(true)
+            setErrorPostContent('You must be logged in to perform this function')
             setTimeout(() => {
                 setErrorPost(false);
             }, 5000);
         }
-        // setLoading(false);
         setContentComment('')
     }
 
@@ -163,7 +173,7 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
                                 </svg>
                                 <span className="sr-only">Info</span>
                                 <div>
-                                    <span className="font-medium">Danger alert!</span> Your comment violates community standards
+                                    <span className="font-medium">Danger alert!</span>&nbsp;{errorPostContent}
                                 </div>
                             </div>
                         )}
@@ -185,7 +195,9 @@ const CommentPart: React.FC<CommentPartProps> = ({ data, songId, setTotalCmt }) 
                                         type="text"
                                         className='w-full py-2 bg-transparent border-2 border-white text-[0.9rem] rounded-3xl pl-3 pr-10 focus:outline-none'
                                         placeholder='Thêm bình luận...'
+                                        maxLength={150}
                                         value={contentCmt}
+
                                         onChange={(e) => setContentComment(e.target.value)}
                                     />
                                     <IoMdClose

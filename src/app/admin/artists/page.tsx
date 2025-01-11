@@ -176,6 +176,8 @@ function Page() {
               type="text"
               placeholder="Search for artist"
               className="ml-2 py-2 pr-2 bg-transparent border-none outline-none placeholder:text-white/70"
+              maxLength={150}
+
               value={searchQuery}
               onChange={handleSearchChange}
            />

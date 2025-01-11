@@ -6,6 +6,7 @@ import { useAppContext as useSongContext } from "@/components/provider/songProvi
 import Image from "next/image";
 import { useToast } from "@/hooks/use-toast"
 import { fetchApiData } from "@/app/api/appService";
+import { fetchApiData as fetchApiDataRecommend } from "@/app/api/appServiceAI";
 import LoadingPage from "@/components/loadingPage";
 import NotFound from "@/app/not-found";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -16,21 +17,20 @@ import CommentSection from "@/components/commentSection";
 import AvatarArtist from "@/components/avatarArtist";
 import SongList from "@/components/listSong";
 import PopularArtists from "@/components/popularArtists";
-import { DataSong } from "@/types/interfaces";
+import { Artist, DataSong } from "@/types/interfaces";
 import { getAllArtistsInfo, getMainArtistInfo, getPosterSong } from "@/utils/utils";
 import { ToastAction } from "@/components/ui/toast";
-import { BiBody } from "react-icons/bi";
 
 const Page = ({ params }: { params: { id: string } }) => {
     const router = useRouter()
     const { toast } = useToast()
-
     const { loading, setLoading, accessToken } = useAppContext();
     const { addToWaitingList, setCurrentSong } = useSongContext();
     const [notFound, setNotFound] = useState(false);
     const [dominantColor, setDominantColor] = useState<string>();
     const [dataSong, setDataSong] = useState<DataSong>()
     const [anotherSong, setAnotherSong] = useState<DataSong[]>([])
+    const [artistFanAlsoLike, setArtistFanAlsoLike] = useState<Artist[]>([])
     const [mainArtist, setMainArtist] = useState<string | undefined>()
     const [showMenuMore, setShowMenuMore] = useState<boolean>(false)
     const [tym, setTym] = useState<boolean>(false)
@@ -66,8 +66,10 @@ const Page = ({ params }: { params: { id: string } }) => {
                 try {
                     const responses = await Promise.all([
                         fetchApiData(`/api/songs/otherByArtist/${result.data.song.artists ? getMainArtistInfo(result.data.song.artists)?.id : ''}`, "GET", null, null, { page: 1 }),
+                        fetchApiDataRecommend("/recommend_artist", "GET", null, accessToken, { page: 1 })
                     ]);
                     if (responses[0].success) setAnotherSong(responses[0].data.songs);
+                    if (responses[1].success) setArtistFanAlsoLike(responses[1].data.artists)
                 } catch (error) {
                     console.error("Error fetching dominant color:", error);
                 }
@@ -213,8 +215,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                 <div className="mx-5 mt-8">
                     <SongList maintitle="Other songs by " subtitle={mainArtist} data={anotherSong} />
                 </div>
-                <div className="mx-5 mt-8">
-                    <PopularArtists maintitle="Fans also like" />
+                <div className="mx-5 my-8">
+                    <PopularArtists maintitle="Fans also like" data={artistFanAlsoLike} />
                 </div>
             </div>
         </div >

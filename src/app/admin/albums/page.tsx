@@ -204,6 +204,7 @@ function Page() {
           >
             <MagnifyingGlassIcon className="w-[20px] h-[20px] text-primaryColorBlue font-extrabold" />
             <input
+                        maxLength={150}
               type="text"
               placeholder="Search for album"
               className="ml-2 py-2 pr-2 bg-transparent border-none outline-none placeholder:text-white/70"

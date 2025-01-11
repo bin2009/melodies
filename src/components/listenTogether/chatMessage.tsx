@@ -14,8 +14,8 @@ function ChatMessage({myId} : {myId: string}) {
     if (!socket) return;
     socket.on("ServerSendMessage", (data) => {
       setChatMessages((prevMessages) => [
-        ...prevMessages,
         { user: data.user, message: data.message, userSend: data.userSend },
+        ...prevMessages,
       ]);
     });
     return () => {
@@ -37,6 +37,7 @@ function ChatMessage({myId} : {myId: string}) {
         <Input
           placeholder="Enter message"
           className="text-white border-primaryColorBlue h-10 rounded-lg"
+          maxLength={100}
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         ></Input>

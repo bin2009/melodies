@@ -283,6 +283,7 @@ const AddAlbumSheet: React.FC<AddAlbumSheetProps> = ({ onSave, artist }) => {
               </Label>
               <Input
                 id="albumTitle"
+                maxLength={150}
                 value={albumTitle}
                 onChange={(e) => setAlbumTitle(e.target.value)}
                 placeholder="Enter album title"

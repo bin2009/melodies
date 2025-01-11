@@ -214,6 +214,8 @@ const Genre: React.FC = () => {
               <div className="flex items-center gap-2 px-2 py-2">
                 <Input
                   placeholder="Enter new genre"
+                  maxLength={150}
+
                   value={genreName}
                   onChange={(e) => setGenreName(e.target.value)}
                   className="flex-1 border-primaryColorBlueHover"
@@ -235,6 +237,8 @@ const Genre: React.FC = () => {
                     <Input
                       ref={editingGenreId === genre.genreId ? inputRef : null}
                       placeholder="Enter new genre"
+                      maxLength={150}
+
                       value={
                         editingGenreId === genre.genreId
                           ? genreName

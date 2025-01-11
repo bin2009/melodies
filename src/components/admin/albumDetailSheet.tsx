@@ -347,6 +347,8 @@ const AlbumDetailSheet: React.FC<AlbumDetailProps> = ({ albumId, onClose }) => {
               <Input
                 id="title"
                 name="title"
+                maxLength={150}
+
                 value={albumTitle}
                 onChange={(e) => setAlbumTitle(e.target.value)}
                 placeholder="Enter track title"

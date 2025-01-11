@@ -93,23 +93,31 @@ const TrackDetailSheet: React.FC<TrackDetailProps> = ({ trackId, onClose }) => {
   const [lyricFile, setLyricFile] = useState<File | null>(null);
   const { toast } = useToast();
   const { accessToken } = useAppContext();
+  const [listArtists, setListArtists] = useState<SimplifiedArtist[]>([]);
+
   //   const { listArtists } = useArtistContext();
-  const { listArtists }: { listArtists: SimplifiedArtist[] } =
-    useArtistContext();
+  // const { listArtists }: { listArtists: SimplifiedArtist[] } =
+  //   useArtistContext();
 
   useEffect(() => {
     const fetchTrackDetail = async () => {
       try {
-        const response = await fetchApiData(
-          `/api/song/${trackId}`,
-          "GET",
-          null,
-          accessToken
-        );
-        if (!response.success) {
+        const response = await Promise.all([
+          fetchApiData(`/api/song/${trackId}`, "GET", null, accessToken),
+          fetchApiData("/api/admin/allArtistName", "GET", null, accessToken),
+        ]);
+        if (!response[0].success) {
           throw new Error("Failed to fetch track details.");
         }
-        const trackData = response.data.song;
+        if (response[1].success) {
+          setListArtists(response[1].data.artists);
+        // console.log("listArtistsData", listArtistsData)
+
+        }
+        // if (!response.success) {
+        //   throw new Error("Failed to fetch track details.");
+        // }
+        const trackData = response[0].data.song;
         setTrackDetail(trackData);
         setTrackTitle(trackData.title);
         setAudioSrc(trackData.filePathAudio);
@@ -148,7 +156,7 @@ const TrackDetailSheet: React.FC<TrackDetailProps> = ({ trackId, onClose }) => {
     if (trackId) fetchTrackDetail();
   }, [trackId]);
 
-  console.log("releaseDate", releaseDate);
+  // console.log("releaseDate", releaseDate);
   const handleMainArtistSelect = (artist: SimplifiedArtist) => {
     setMainArtist(artist.id);
     setOpenMainArtist(false);
@@ -354,6 +362,8 @@ const TrackDetailSheet: React.FC<TrackDetailProps> = ({ trackId, onClose }) => {
               <Input
                 id="title"
                 name="title"
+                maxLength={150}
+
                 value={trackTitle}
                 onChange={(e) => setTrackTitle(e.target.value)}
                 placeholder="Enter track title"

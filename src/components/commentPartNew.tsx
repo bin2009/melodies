@@ -35,32 +35,39 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
     const handleComment = async () => {
         if (contentCmt.trim() === '') return
         setErrorPost(false)
-        const payload = {
-            songId: songId,
-            commentParentId: data?.id,
-            content: contentCmt
-        }
-        const response = await fetchApiDataAI(`/actions/comment`, 'POST', JSON.stringify(payload), accessToken)
-        if (response.success) {
-            if (response.data.status === 'success') {
-                setShowCmtChild(true)
-                cmtChild.unshift(response.data.comment)
-                setTotalCmt((prev) => prev + 1)
+        if (accessToken) {
+            const payload = {
+                songId: songId,
+                commentParentId: data?.id,
+                content: contentCmt
+            }
+            const response = await fetchApiDataAI(`/actions/comment`, 'POST', JSON.stringify(payload), accessToken)
+            if (response.success) {
+                if (response.data.status === 'success') {
+                    setShowCmtChild(true)
+                    cmtChild.unshift(response.data.comment)
+                    setTotalCmt((prev) => prev + 1)
+                } else {
+                    setMessageError("Your comment violates community standards")
+                    setErrorPost(true)
+                    setTimeout(() => {
+                        setErrorPost(false);
+                    }, 5000);
+                }
             } else {
-                setMessageError(response.data.message)
+                setMessageError(response.error)
                 setErrorPost(true)
                 setTimeout(() => {
                     setErrorPost(false);
                 }, 5000);
             }
         } else {
-            setMessageError(response.error)
+            setMessageError("Your comment violates community standards")
             setErrorPost(true)
             setTimeout(() => {
                 setErrorPost(false);
             }, 5000);
         }
-        // setLoading(false);
         setContentComment('')
     }
 
@@ -70,7 +77,7 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
 
     return (
         <div>
-            <Comment dataUser={data?.user} idComment={data?.id} time={data?.createdAt} comment={data?.content || ''} role='parent' isMyCmt={data?.myComment} />
+            <Comment dataUser={data?.user} idComment={data?.id} time={data?.createdAt} comment={data?.content || ''} role='parent' isMyCmt={true} />
             {showCmtChild && (
                 <div className="">
                     {cmtChild.length > 0 && (
@@ -82,7 +89,7 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
                                 time={childComment.createdAt}
                                 comment={childComment.content}
                                 role="children"
-                                isMyCmt={childComment?.myComment}
+                                isMyCmt={true}
                             />
                         ))
                     )}
@@ -96,7 +103,7 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
                             onClick={() => setShowCmtChild(true)}
                         >
                             <div className="w-[2rem] h-[0.1rem] bg-gray-200 font-bold mr-3"></div>
-                            <p className='text-[0.85rem] text-gray-200 text-nowrap group-hover:underline'>Xem thêm {cmtChild.length} câu trả lời</p>
+                            <p className='text-[0.85rem] text-gray-200 text-nowrap group-hover:underline'>View {cmtChild.length} replies</p>
                             <FaChevronDown className='ml-2 w-3 h-3 text-gray-200 mr-5' />
                         </div>
                     )
@@ -107,7 +114,7 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
                             className='flex items-center cursor-pointer group'
                             onClick={handleHidden}
                         >
-                            <p className='group-hover:underline text-[0.85rem] text-gray-200'>Ẩn</p>
+                            <p className='group-hover:underline text-[0.85rem] text-gray-200'>Hide</p>
                             <FaChevronUp className='ml-2 w-2 h-2 text-gray-200' />
                         </div>
 
@@ -125,7 +132,7 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
                                 </svg>
                                 <span className="sr-only">Info</span>
                                 <div>
-                                    <span className="font-medium">Danger alert!</span> {messageError}
+                                    <span className="font-medium">Danger alert!</span>&nbsp;{messageError}
                                 </div>
                             </div>
                         )}
@@ -147,7 +154,9 @@ const CommentPartNew: React.FC<CommentPartProps> = ({ data, songId, cmtChild, se
                                         type="text"
                                         className='w-full py-2 bg-transparent border-2 border-white text-[0.9rem] rounded-3xl pl-3 pr-10 focus:outline-none'
                                         placeholder='Thêm bình luận...'
+                                        maxLength={150}
                                         value={contentCmt}
+
                                         onChange={(e) => setContentComment(e.target.value)}
                                     />
                                     <IoMdClose

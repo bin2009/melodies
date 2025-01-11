@@ -22,7 +22,6 @@ import {
   LoginBodyType,
 } from "../../../../schemaValidations/auth.schema";
 
-import { FcGoogle } from "react-icons/fc";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
@@ -95,6 +94,7 @@ function Page() {
                       placeholder="Enter your username of email"
                       {...field}
                       className="pl-8"
+                      maxLength={150}
                     />
                   </div>
                 </FormControl>
@@ -118,6 +118,7 @@ function Page() {
                       {...field}
                       className="pl-8"
                       autoComplete="on"
+                      maxLength={150}
                     />
                   </div>
                 </FormControl>
@@ -150,19 +151,7 @@ function Page() {
               </span>
             </p>
           </div>
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t"></div>
-            <span className="mx-3">Or</span>
-            <div className="flex-grow border-t"></div>
-          </div>
 
-          <Button
-            type="submit"
-            className="bg-transparent  border-white border-2 w-full p-4 flex items-center justify-center gap-2 group"
-          >
-            <FcGoogle className="w-6 h-6" />
-            <p className="text-white group-hover:text-black">Login With Google</p>
-          </Button>
         </form>
       </Form>
     </div>

@@ -4,17 +4,7 @@ import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { PlusIcon } from "@radix-ui/react-icons";
 import { useAppContext } from "@/components/provider/songProvider";
-
-interface Artist {
-  id: string;
-  name: string;
-  avatar: string;
-  bio: string | null;
-  createdAt: string;
-  updatedAt: string;
-  followerCount: string;
-}
-
+import { Artist } from "@/types/interfaces";
 interface PeopleListProps {
   maintitle?: string;
   subtitle?: string;
@@ -57,20 +47,6 @@ const PopularArtists: React.FC<PeopleListProps> = ({
             <h3 className="text-textMedium line-clamp-1 group-hover:underline">{artist.name}</h3>
           </div>
         ))}
-
-        {/* View All button */}
-        <div className="flex flex-col items-center cursor-pointer">
-          <PlusIcon
-            className={`${showSidebarRight ? "w-[40px] h-[40px]" : "w-[50px] h-[50px]"
-              } bg-[#1F1F1F] rounded-full p-3 mb-2`}
-          />
-          <p
-            className={`${showSidebarRight ? "font-semibold text-[0.9rem]" : "text-h4"
-              } whitespace-nowrap`}
-          >
-            View All
-          </p>
-        </div>
       </div>
 
       {/* Fallback for empty data */}

@@ -74,7 +74,6 @@ const Page = () => {
         }
         const formData = new FormData();
         const data = {
-            username,
             name
         }
         formData.append('data', JSON.stringify(data));
@@ -117,6 +116,8 @@ const Page = () => {
                                     accept='image/png, image/jpeg, image/gif'
                                     className='hidden'
                                     onChange={handleImageChange}
+                                    maxLength={150}
+
                                 />
                                 <p className='text-[0.8rem]'>JPG, GIF or PNG. 1MB max.</p>
                             </div>
@@ -136,6 +137,8 @@ const Page = () => {
                                         value={name}
                                         onChange={(e) => setName(e.target.value)}
                                         placeholder="Full Name"
+                                        maxLength={150}
+
                                         className="text-[0.9rem] peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-pink-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                                     />
                                     <label className="font-bold after:content[' '] pointer-events-none absolute left-0 -top-2.5 flex h-full w-full select-none leading-tight text-blue-gray-500 transition-all after:absolute after:-bottom-2.5 after:block after:w-full after:scale-x-0 after:border-b-2 after:border-pink-500 after:transition-transform after:duration-300 peer-placeholder-shown:leading-tight peer-placeholder-shown:text-blue-gray-500 peer-focus:text-sm peer-focus:leading-tight peer-focus:text-pink-500 peer-focus:after:scale-x-100 peer-focus:after:border-pink-500 peer-disabled:text-transparent peer-disabled:peer-placeholder-shown:text-blue-gray-500">
@@ -144,6 +147,8 @@ const Page = () => {
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
+                                        maxLength={150}
+
                                         value={username}
                                         disabled
                                         placeholder="User Name"
@@ -155,6 +160,8 @@ const Page = () => {
                                 </div>
                                 <div className="relative h-11 w-full min-w-[200px]">
                                     <input
+                                        maxLength={150}
+
                                         value={user?.email}
                                         disabled
                                         placeholder="Email Address"
@@ -184,6 +191,8 @@ const Page = () => {
                         <div className='space-y-10'>
                             <div className="relative h-11 w-full min-w-[200px]">
                                 <input
+                                    maxLength={150}
+
                                     placeholder="Current Password"
                                     className="text-[0.9rem] peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-pink-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                                 />
@@ -193,6 +202,8 @@ const Page = () => {
                             </div>
                             <div className="relative h-11 w-full min-w-[200px]">
                                 <input
+                                    maxLength={150}
+
                                     placeholder="New Password"
                                     className="text-[0.9rem] peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-pink-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                                 />
@@ -202,6 +213,8 @@ const Page = () => {
                             </div>
                             <div className="relative h-11 w-full min-w-[200px]">
                                 <input
+                                    maxLength={150}
+
                                     placeholder="Confirm New Password"
                                     className="text-[0.9rem] peer h-full w-full border-b border-blue-gray-200 bg-transparent pt-4 pb-1.5 font-sans text-sm font-normal text-blue-gray-700 outline outline-0 transition-all placeholder-shown:border-blue-gray-200 focus:border-pink-500 focus:outline-0 disabled:border-0 disabled:bg-blue-gray-50"
                                 />

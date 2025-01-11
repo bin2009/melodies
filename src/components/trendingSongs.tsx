@@ -119,11 +119,6 @@ const TrendingSongs: React.FC<SongListProps> = ({ maintitle, subtitle, data }) =
             })}
           </tbody>
         </table>
-
-        <button className="h-[40px] w-[120px] mt-1 bg-secondColorBg text-white rounded-sm flex items-center justify-center gap-2">
-          <PlusIcon className="w-5 h-5" />
-          View All
-        </button>
       </div>
     </div>
   );

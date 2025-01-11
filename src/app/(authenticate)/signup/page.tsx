@@ -22,7 +22,6 @@ import {
 import { useToast } from "@/hooks/use-toast"
 import { ToastAction } from "@/components/ui/toast"
 
-import { FcGoogle } from "react-icons/fc";
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { PersonIcon } from "@radix-ui/react-icons";
 import { LockClosedIcon } from "@radix-ui/react-icons";
@@ -103,6 +102,7 @@ function Page() {
                         placeholder="Enter your username"
                         {...field}
                         className="pl-8"
+                      maxLength={150}
                       />
                     </div>
                   </FormControl>
@@ -127,6 +127,7 @@ function Page() {
                         type="email"
                         {...field}
                         className="pl-9"
+                        maxLength={150}
                       />
                     </div>
                   </FormControl>
@@ -152,6 +153,7 @@ function Page() {
                         type="password"
                         {...field}
                         className="pl-8"
+                        maxLength={150}
                       />
                     </div>
                   </FormControl>
@@ -176,6 +178,7 @@ function Page() {
                         type="password"
                         {...field}
                         className="pl-9"
+                        maxLength={150}
                       />
                     </div>
                   </FormControl>
@@ -192,6 +195,7 @@ function Page() {
               checked={isChecked}
               onChange={handleCheckboxChange}
               className="mr-2 bg-transparent h-4 w-4 border-2 border-black"
+              maxLength={150}
             />
             <label htmlFor="terms" className="text-textMedium">
               I agree to all the Terms and Privacy Policies
@@ -217,19 +221,6 @@ function Page() {
               </span>
             </p>
           </div>
-          <div className="flex items-center my-4">
-            <div className="flex-grow border-t"></div>
-            <span className="mx-3">Or</span>
-            <div className="flex-grow border-t"></div>
-          </div>
-
-          <Button
-            type="submit"
-            className="bg-transparent  border-white border-2 w-full p-4 flex items-center justify-center gap-2 "
-          >
-            <FcGoogle className="w-6 h-6" />
-            Sign Up With Google
-          </Button>
         </form>
       </Form>
     </div>

@@ -254,6 +254,7 @@ const ArtistDetailSheet: React.FC<
               <Input
                 id="title"
                 name="title"
+                maxLength={150}
                 value={artistName}
                 onChange={(e) => setArtistName(e.target.value)}
                 placeholder="Enter track title"
